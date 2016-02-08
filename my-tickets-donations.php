@@ -28,6 +28,27 @@ $mtd_version = '1.0.1';
 
 load_plugin_textdomain( 'my-tickets-donations', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
+// The URL of the site with EDD installed
+define( 'EDD_MTD_STORE_URL', 'https://www.joedolson.com' ); 
+// The title of your product in EDD and should match the download title in EDD exactly
+define( 'EDD_MTD_ITEM_NAME', 'My Tickets: Donations' ); 
+
+if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+	// load our custom updater if it doesn't already exist 
+	include( dirname( __FILE__ ) . '/updates/EDD_SL_Plugin_Updater.php' );
+}
+
+// retrieve our license key from the DB
+$license_key = trim( get_option( 'mtd_license_key' ) ); 
+// setup the updater
+$edd_updater = new EDD_SL_Plugin_Updater( EDD_MTD_STORE_URL, __FILE__, array(
+	'version' 	=> $mtd_version,					// current version number
+	'license' 	=> $license_key,			// license key (used get_option above to retrieve from DB)
+	'item_name'     => EDD_MTD_ITEM_NAME,	// name of this plugin
+	'author' 	=> 'Joe Dolson',		// author of this plugin
+	'url'           => home_url()
+) );
+
 /*
  * Create custom field added to My Tickets shopping cart where user can add a custom donation amount.
  *
@@ -582,28 +603,6 @@ function mtd_printable_report_back( $back ) {
 		$back = 'admin.php?page=my-tickets-donations';
 	}
 	return $back;
-}
-
-/* Common fields to all My Tickets add-ons */
-add_action( 'init', 'mtd_check_for_upgrades' );
-/**
- * Check for automatic upgrade availability.
- */
-function mtd_check_for_upgrades() {
-	if ( is_admin() ) {
-		global $mtd_version;
-		$hash = get_option( 'mtd_license_key' );
-		if ( ! $hash ) {
-			return;
-		}
-		$mt_plugin_current_version = $mtd_version;
-		$mt_plugin_remote_path     = "http://www.joedolson.com/wp-content/plugins/files/updates-v2.php?key=$hash";
-		$mt_plugin_slug            = plugin_basename( __FILE__ );
-		if ( class_exists( 'mt_auto_update' ) ) {
-			new mt_auto_update( $mt_plugin_current_version, $mt_plugin_remote_path, $mt_plugin_slug );
-		}
-	}
-	return;
 }
 
 /**
