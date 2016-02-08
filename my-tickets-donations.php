@@ -5,9 +5,9 @@ Plugin URI: http://www.joedolson.com/
 Description: Invite ticket purchasers to make a voluntary donation at the time of purchase.
 Author: Joseph C Dolson
 Author URI: http://www.joedolson.com/product/my-tickets-donations/
-Version: 1.0.1
+Version: 1.0.2
 */
-/*  Copyright 2015  Joe Dolson (email : joe@joedolson.com)
+/*  Copyright 2015-2016  Joe Dolson (email : joe@joedolson.com)
 
     This program is open source software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ Version: 1.0.1
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 global $mtd_version;
-$mtd_version = '1.0.1';
+$mtd_version = '1.0.2';
 
 load_plugin_textdomain( 'my-tickets-donations', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
