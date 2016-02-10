@@ -627,7 +627,7 @@ function mtd_save_license( $response, $post ) {
 	$field = 'mtd_license_key';
 	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );	
 	if ( $post[$field] != get_option( $field ) ) {
-		$verify = mt_verify_key( $field, $name );
+		$verify = mt_verify_key( $field, EDD_MTD_ITEM_NAME, EDD_MTD_STORE_URL );
 	} else {
 		$verify = '';
 	}
