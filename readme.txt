@@ -27,6 +27,7 @@ New or updated translations are always appreciated. The translation files are in
 = 1.0.2 =
 
 * Updated for EDD distribution of auto updates.
+* Update for EDD license activation
 
 = 1.0.1 =
 
