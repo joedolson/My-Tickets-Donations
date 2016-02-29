@@ -5,7 +5,7 @@ Plugin URI: http://www.joedolson.com/
 Description: Invite ticket purchasers to make a voluntary donation at the time of purchase.
 Author: Joseph C Dolson
 Author URI: http://www.joedolson.com/product/my-tickets-donations/
-Version: 1.0.2
+Version: 1.0.3
 */
 /*  Copyright 2015-2016  Joe Dolson (email : joe@joedolson.com)
 
@@ -24,7 +24,7 @@ Version: 1.0.2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 global $mtd_version;
-$mtd_version = '1.0.2';
+$mtd_version = '1.0.3';
 
 load_plugin_textdomain( 'my-tickets-donations', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
@@ -614,10 +614,11 @@ function mtd_printable_report_back( $back ) {
 add_action( 'mt_license_fields', 'mtd_license_field' );
 function mtd_license_field( $fields ) {
 	$field = 'mtd_license_key';
+	$active = ( get_option( 'mts_license_key_valid' ) == 'valid' ) ? ' <span class="license-activated">(active)</span>' : '';
 	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );
 	return $fields . "
 	<p class='license'>
-		<label for='$field'>$name</label><br/>
+		<label for='$field'>$name$active</label><br/>
 		<input type='text' name='$field' id='$field' size='60' value='".esc_attr( trim( get_option( $field ) ) )."' />
 	</p>";
 }
@@ -626,17 +627,14 @@ add_action( 'mt_save_license', 'mtd_save_license', 10, 2 );
 function mtd_save_license( $response, $post ) {
 	$field = 'mtd_license_key';
 	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );	
-	if ( $post[$field] != get_option( $field ) ) {
-		$verify = mt_verify_key( $field, EDD_MTD_ITEM_NAME, EDD_MTD_STORE_URL );
-	} else {
-		$verify = '';
-	}
+	$verify = mt_verify_key( $field, EDD_MTD_ITEM_NAME, EDD_MTD_STORE_URL );
 	$verify = "<li>$verify</li>";
+	
 	return $response . $verify;
 }
 
 // these are existence checkers. Exist if licensed.
-if ( get_option( 'mtd_license_key_valid' ) == 'true' ) {
+if ( get_option( 'mtd_license_key_valid' ) == 'true' || get_option( 'mtd_license_key_valid' ) == 'valid'  ) {
 	function mtd_valid() {
 		return true;
 	}

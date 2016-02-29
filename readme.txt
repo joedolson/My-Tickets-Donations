@@ -24,6 +24,10 @@ New or updated translations are always appreciated. The translation files are in
 
 == Changelog ==
 
+= 1.0.3 =
+
+* Bug fixes with license activation & updates
+
 = 1.0.2 =
 
 * Updated for EDD distribution of auto updates.
