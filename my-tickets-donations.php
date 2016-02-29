@@ -614,12 +614,12 @@ function mtd_printable_report_back( $back ) {
 add_action( 'mt_license_fields', 'mtd_license_field' );
 function mtd_license_field( $fields ) {
 	$field = 'mtd_license_key';
-	$active = ( get_option( 'mts_license_key_valid' ) == 'valid' ) ? ' <span class="license-activated">(active)</span>' : '';
+	$active = ( get_option( 'mtd_license_key_valid' ) == 'valid' ) ? ' <span class="license-activated">(active)</span>' : '';
 	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );
 	return $fields . "
 	<p class='license'>
 		<label for='$field'>$name$active</label><br/>
-		<input type='text' name='$field' id='$field' size='60' value='".esc_attr( trim( get_option( $field ) ) )."' />
+		<input type='text' name='$field' id='$field' size='60' value='" . esc_attr( trim( get_option( $field ) ) ) . "' />
 	</p>";
 }
 
