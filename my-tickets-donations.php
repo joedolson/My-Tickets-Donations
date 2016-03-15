@@ -5,7 +5,7 @@ Plugin URI: http://www.joedolson.com/
 Description: Invite ticket purchasers to make a voluntary donation at the time of purchase.
 Author: Joseph C Dolson
 Author URI: http://www.joedolson.com/product/my-tickets-donations/
-Version: 1.0.3
+Version: 1.0.4
 */
 /*  Copyright 2015-2016  Joe Dolson (email : joe@joedolson.com)
 
@@ -24,7 +24,7 @@ Version: 1.0.3
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 global $mtd_version;
-$mtd_version = '1.0.3';
+$mtd_version = '1.0.4';
 
 load_plugin_textdomain( 'my-tickets-donations', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
@@ -161,12 +161,12 @@ function mtd_save_donation( $payment, $post ) {
 add_filter( 'mt_show_in_payment_fields', 'mtd_show_donation', 10, 2 );
 function mtd_show_donation( $output, $post_ID ) {
 	$donation = get_post_meta( $post_ID, '_donation', true );
-	if ( $donation ) {
-		$donation = sprintf( __( 'Includes a donation of <strong>%s</strong>', 'my-tickets-donations' ), apply_filters( 'mt_money_format', $donation ) );
+	if ( $donation && is_numeric( $donation ) ) {
+		$donation_phrase = sprintf( __( 'Includes a donation of <strong>%s</strong>', 'my-tickets-donations' ), apply_filters( 'mt_money_format', $donation ) );
 	} else {
-		$donation = __( 'No Donation included', 'my-tickets-donations' );
+		$donation_phrase = __( 'No Donation included', 'my-tickets-donations' );
 	}
-	return $output . $donation;
+	return $output . $donation_phrase;
 }
 
 add_filter( 'mt_generate_cart_total', 'mtd_include_donation_in_total', 10, 1 );
@@ -219,7 +219,9 @@ function mt_get_donation_details() {
 	$receipt = mt_get_receipt();
 	if ( $receipt ) {
 		$donation = get_post_meta( $receipt->ID, '_donation', true );
-		$donation = sprintf( __( 'Includes a donation of <strong>%s</strong>', 'my-tickets-donations' ), apply_filters( 'mt_money_format', $donation ) );
+		if ( $donation && is_numeric( $donation ) ) {
+			$donation = sprintf( __( 'Includes a donation of <strong>%s</strong>', 'my-tickets-donations' ), apply_filters( 'mt_money_format', $donation ) );
+		} 
 		return $donation;
 	}
 

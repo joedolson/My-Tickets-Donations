@@ -24,6 +24,11 @@ New or updated translations are always appreciated. The translation files are in
 
 == Changelog ==
 
+= 1.0.4 =
+
+* Bug fix with donations notice on receipts
+* 
+
 = 1.0.3 =
 
 * Bug fixes with license activation & updates
