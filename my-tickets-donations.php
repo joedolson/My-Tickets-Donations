@@ -293,6 +293,7 @@ function mtd_report_fields( $fields, $context ) {
 	if ( $context == 'reports' ) {
 		$fields['_donation'] = array( 'title'=> __( 'Donation', 'my-tickets-donations' ) );
 	}
+	
 	return $fields;
 }
 
