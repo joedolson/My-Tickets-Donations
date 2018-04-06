@@ -321,6 +321,11 @@ function mtd_donations( $start, $end ) {
 add_filter( 'mt_custom_fields', 'mtd_report_fields', 10, 2 );
 /*
  * Add donation value to reports. Uses @mt_custom_fields filter, but only in reports.
+ *
+ * @param array  $fields All fields.
+ * @param string $context Current display context.
+ *
+ * @return array.
  */
 function mtd_report_fields( $fields, $context ) {
 	if ( $context == 'reports' ) {
@@ -330,43 +335,47 @@ function mtd_report_fields( $fields, $context ) {
 	return $fields;
 }
 
-// Actions/Filters for various tables and the css output
+// Actions/Filters for various tables and the css output.
 add_action( 'admin_init', 'mtd_add' );
 /**
  * Add custom columns to payments post type page.
  */
 function mtd_add() {
 	add_action( 'admin_head', 'mtd_css' );
-	add_filter( "manage_mt-payments_posts_columns", 'mtd_column' );
+	add_filter( 'manage_mt-payments_posts_columns', 'mtd_column' );
 	add_action( "manage_mt-payments_posts_custom_column", 'mtd_custom_column', 10, 2 );
 }
 
-// Output CSS for width of new column
+/**
+ * Output CSS for width of new column
+ */
 function mtd_css() {
 	global $current_screen;
-	if ( $current_screen->id == 'mt-payments' || $current_screen->id == 'edit-mt-payments' ) {
+	if ( 'mt-payments' == $current_screen->id || 'edit-mt-payments' == $current_screen->id ) {
 		wp_enqueue_style( 'mtd.posts', plugins_url( 'css/mtd-post.css', __FILE__ ) );
 	}
 }
 /**
  * Add status/total and receipt ID fields to Payments post type.
  *
- * @param $cols
+ * @param array $cols All columns
  *
  * @return mixed
  */
 function mtd_column( $cols ) {
-	$cols['mt_donation']  = __( 'Donation', 'my-tickets-donations' );
+	$cols['mt_donation'] = __( 'Donation', 'my-tickets-donations' );
 
 	return $cols;
 }
 
 
-// Echo the ID for the new column
 /**
  * In Payment post type, get status paid and receipt data.
- * @param $column_name
- * @param $id
+ *
+ * @param string  $column_name Column name.
+ * @param integer $id Current object ID.
+ *
+ * @return string.
  */
 function mtd_custom_column( $column_name, $id ) {
 	switch ( $column_name ) {
@@ -382,7 +391,6 @@ function mtd_custom_column( $column_name, $id ) {
 	}
 }
 
-
 add_action( 'admin_menu', 'mtd_menu_item', 11 );
 /**
  * Add submenus item to show donations page.
@@ -392,9 +400,12 @@ function mtd_menu_item() {
 	add_submenu_page( 'my-tickets', __( 'My Tickets: Donations', 'my-tickets' ), __( 'Donations', 'my-tickets' ), $permission, 'my-tickets-donations', 'mtd_list' );
 }
 
+/**
+ * Settings page showing donations information.
+ */
 function mtd_list() {
+	$response = mtd_update_settings( $_POST ); 
 	?>
-	<?php $response = mtd_update_settings( $_POST ); ?>
 	<div class="wrap my-tickets" id="mt_donations">
 		<div id="icon-options-general" class="icon32"><br/></div>
 		<h2><?php _e( 'Donations', 'my-tickets-donations' ); ?></h2>
@@ -419,7 +430,7 @@ function mtd_list() {
 						<h3><?php _e( 'Donations Settings', 'my-tickets-donations' ); ?></h3>
 						<div class="inside">
 							<?php echo $response; ?>
-							<form method="post" action="<?php echo admin_url( "admin.php?page=my-tickets-donations" ); ?>">
+							<form method="post" action="<?php echo admin_url( 'admin.php?page=my-tickets-donations' ); ?>">
 								<div><input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'my-tickets-donations' ); ?>"/></div>
 								<p>
 									<label for="mtd_cta"><?php _e( 'Donation label:', 'my-tickets-donations' ); ?></label>
@@ -437,6 +448,13 @@ function mtd_list() {
 	<?php
 }
 
+/**
+ * Update Donations settings.
+ *
+ * @param array $post POST data.
+ *
+ * @return boolean|string
+ */
 function mtd_update_settings( $post ) {
 	if ( isset( $post['mtd-settings'] ) ) {
 		$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : false;
@@ -451,7 +469,7 @@ function mtd_update_settings( $post ) {
 			update_option( 'mtd_cta', $mtd_cta );
 		}
 
-		return "<div class=\"updated\"><p><strong>" . __( 'Donations Settings saved', 'my-tickets-donations' ) . "</strong></p></div>";
+		return '<div class="updated"><p><strong>"' . __( 'Donations Settings saved', 'my-tickets-donations' ) . '</strong></p></div>';
 	}
 
 	return false;
@@ -465,18 +483,18 @@ function mtd_update_settings( $post ) {
  *
  * @return array
  */
-function mtd_donations_list( $start=false, $end=false, $return=false ) {
-	$data = mtd_donations_data( $start, $end );
-	$start = $data['start'];
-	$end   = $data['end'];
-	$posts = $data['posts'];
-	$total = 0;
-	$count = 0;
-	$selected = ( isset( $_GET['format'] ) && $_GET['format'] == 'csv' ) ? " selected='selected'" : '';
+function mtd_donations_list( $start = false, $end = false, $return = false ) {
+	$data     = mtd_donations_data( $start, $end );
+	$start    = $data['start'];
+	$end      = $data['end'];
+	$posts    = $data['posts'];
+	$total    = 0;
+	$count    = 0;
+	$selected = ( isset( $_GET['format'] ) && 'csv' == $_GET['format'] ) ? " selected='selected'" : '';
 	$form     = "
 			<div class='donations-by-date'>
 				<h4>" . __( 'Donations Report by Date', 'my-tickets-donations' ) . "</h4>
-				<form method='GET' action='" . admin_url( "admin.php?page=my-tickets-donations" ) . "'>
+				<form method='GET' action='" . admin_url( 'admin.php?page=my-tickets-donations' ) . "'>
 					<div>
 						<input type='hidden' name='page' value='my-tickets-donations' />
 					</div>
@@ -512,9 +530,9 @@ function mtd_donations_list( $start=false, $end=false, $return=false ) {
 		$count = count( $posts );
 		foreach ( $posts as $payment ) {
 			$purchase_id = $payment->ID;
-			$donation = get_post_meta( $purchase_id, '_donation', true );
-			$total    = $total + $donation;
-			$row = "
+			$donation    = get_post_meta( $purchase_id, '_donation', true );
+			$total       = $total + $donation;
+			$row         = "
 			<tr>
 			<th scope='row'>$payment->post_title</th>
 			<td>" . apply_filters( 'mt_money_format', $donation ) . "</td>
