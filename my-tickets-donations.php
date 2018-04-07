@@ -610,31 +610,29 @@ add_action( 'admin_init', 'mtd_donations_csv' );
  */
 function mtd_donations_csv() {
 	$csv = '';
-	if ( isset( $_GET['format'] ) && $_GET['format'] == 'csv'
-		&& isset( $_GET['page'] ) && $_GET['page'] == 'my-tickets-donations'
-		&& isset( $_GET['mt_start'] ) ) {
+	if ( isset( $_GET['format'] ) && 'csv' == $_GET['format'] && isset( $_GET['page'] ) && 'my-tickets-donations' == $_GET['page'] && isset( $_GET['mt_start'] ) ) {
 		$data  = mtd_donations_data();
 		$posts = $data['posts'];
 		$start = $data['start'];
 		$end   = $data['end'];
-		$csv = __( 'First Name', 'my-tickets-donations' ) . "," . __( 'Last name', 'my-tickets-donations' ) . "," . __( 'Donation Amount', 'my-tickets-donations' ) . "," . __( 'Date', 'my-tickets-donations' ) . "," . __( 'Receipt ID', 'my-tickets-donations' ) . PHP_EOL;
+		$csv   = __( 'First Name', 'my-tickets-donations' ) . ',' . __( 'Last name', 'my-tickets-donations' ) . ',' . __( 'Donation Amount', 'my-tickets-donations' ) . ',' . __( 'Date', 'my-tickets-donations' ) . ',' . __( 'Receipt ID', 'my-tickets-donations' ) . PHP_EOL;
 		foreach ( $posts as $payment ) {
 			$purchase_id = $payment->ID;
-			$purchaser    = get_the_title( $payment->ID );
-			$first_name    = get_post_meta( $payment->ID, '_first_name', true );
-			$last_name     = get_post_meta( $payment->ID, '_last_name', true );
-			if ( !$first_name && !$last_name ) {
-				$name = explode( ' ', $purchaser );
+			$purchaser   = get_the_title( $payment->ID );
+			$first_name  = get_post_meta( $payment->ID, '_first_name', true );
+			$last_name   = get_post_meta( $payment->ID, '_last_name', true );
+			if ( ! $first_name && ! $last_name ) {
+				$name       = explode( ' ', $purchaser );
 				$first_name = $name[0];
-				$last_name = end( $name );
+				$last_name  = end( $name );
 			}
-			$receipt = get_post_meta( $purchase_id, '_receipt', true );
-			$date = date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) );
+			$receipt  = get_post_meta( $purchase_id, '_receipt', true );
+			$date     = date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) );
 			$donation = get_post_meta( $purchase_id, '_donation', true );
-			$row = "\"$first_name\",\"$last_name\",\"$donation\",\"$date\",\"$receipt\"" . PHP_EOL;
-			$csv .= $row;
+			$row      = "\"$first_name\",\"$last_name\",\"$donation\",\"$date\",\"$receipt\"" . PHP_EOL;
+			$csv     .= $row;
 		}
-		$title = sanitize_title( 'donations_'.$start . '_' . $end ) . '-' . date( 'Y-m-d' );
+		$title = sanitize_title( 'donations_' . $start . '_' . $end ) . '-' . date( 'Y-m-d' );
 		header( 'Content-Type: application/csv' );
 		header( "Content-Disposition: attachment; filename=$title.csv" );
 		header( 'Pragma: no-cache' );
@@ -643,42 +641,52 @@ function mtd_donations_csv() {
 	}
 }
 
+add_filter( 'mt_printable_report', 'mtd_printable_report' );
 /*
  * Make report printable.
+ *
+ * @param string $report Report content.
+ *
+ * @return report.
  */
-add_filter( 'mt_printable_report', 'mtd_printable_report' );
 function mtd_printable_report( $report ) {
 	$context = ( isset( $_GET['mt-event-report'] ) ) ? $_GET['mt-event-report'] : false;
-	if ( $context == 'donations' ) {
+	if ( 'donations' == $context ) {
 
 		$report = mtd_donations_list( false, false, true );
 	}
 	return $report;
 }
 
+add_filter( 'mt_printable_report_back', 'mtd_printable_report_back' );
 /*
  * Make report back link return to donations.
+ *
+ * @param string $back Link
+ *
+ * @return back link
  */
-add_filter( 'mt_printable_report_back', 'mtd_printable_report_back' );
 function mtd_printable_report_back( $back ) {
 	$context = ( isset( $_GET['mt-event-report'] ) ) ? $_GET['mt-event-report'] : false;
-	if ( $context == 'donations' ) {
+	if ( 'donations' == $context ) {
 		$back = 'admin.php?page=my-tickets-donations';
 	}
 	return $back;
 }
 
+add_action( 'mt_license_fields', 'mtd_license_field' );
 /**
  * Insert license key field onto license keys page.
  *
  * @param $fields string Existing fields.
+ *
  * @return string
  */
-add_action( 'mt_license_fields', 'mtd_license_field' );
 function mtd_license_field( $fields ) {
-	$field = 'mtd_license_key';
-	$active = ( get_option( 'mtd_license_key_valid' ) == 'valid' ) ? ' <span class="license-activated">(active)</span>' : '';
-	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );
+	$field  = 'mtd_license_key';
+	$active = ( 'valid' == get_option( 'mtd_license_key_valid' ) ) ? ' <span class="license-activated">(active)</span>' : '';
+	$name   =  __( 'My Tickets: Donations', 'my-tickets-donations' );
+	
 	return $fields . "
 	<p class='license'>
 		<label for='$field'>$name$active</label><br/>
@@ -687,9 +695,17 @@ function mtd_license_field( $fields ) {
 }
 
 add_action( 'mt_save_license', 'mtd_save_license', 10, 2 );
+/**
+ * Save donations license.
+ *
+ * @param string $response Existing response.
+ * @param array  $post POST data.
+ *
+ * @return string response.
+ */
 function mtd_save_license( $response, $post ) {
-	$field = 'mtd_license_key';
-	$name =  __( 'My Tickets: Donations', 'my-tickets-donations' );
+	$field  = 'mtd_license_key';
+	$name   =  __( 'My Tickets: Donations', 'my-tickets-donations' );
 	$verify = mt_verify_key( $field, EDD_MTD_ITEM_NAME, EDD_MTD_STORE_URL );
 	$verify = "<li>$verify</li>";
 
@@ -697,11 +713,23 @@ function mtd_save_license( $response, $post ) {
 }
 
 // these are existence checkers. Exist if licensed.
-if ( get_option( 'mtd_license_key_valid' ) == 'true' || get_option( 'mtd_license_key_valid' ) == 'valid'  ) {
+if ( 'true' == get_option( 'mtd_license_key_valid' ) || 'valid' == get_option( 'mtd_license_key_valid' ) ) {
+	/**
+	 * This is a valid install.
+	 */
 	function mtd_valid() {
 		return true;
 	}
 } else {
+	add_action( 'admin_notices', 'mtd_donations_licensed' );
+}
+
+function mtd_donations_licensed() {
+	// Translators: Settings page URL.
 	$message = sprintf( __( "Please <a href='%s'>enter your My Tickets: Donations license key</a> to be eligible for support.", 'my-tickets-donations' ), admin_url( 'admin.php?page=my-tickets' ) );
-	add_action( 'admin_notices', create_function( '', "if ( ! current_user_can( 'manage_options' ) ) { return; } else { echo \"<div class='error'><p>$message</p></div>\";}" ) );
+	if ( ! current_user_can( 'manage_options' ) ) { 
+		return; 
+	} else { 
+		echo "<div class='error'><p>$message</p></div>";
+	}
 }
