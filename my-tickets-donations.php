@@ -404,7 +404,7 @@ function mtd_menu_item() {
  * Settings page showing donations information.
  */
 function mtd_list() {
-	$response = mtd_update_settings( $_POST ); 
+	$response = mtd_update_settings( $_POST );
 	?>
 	<div class="wrap my-tickets" id="mt_donations">
 		<div id="icon-options-general" class="icon32"><br/></div>
@@ -537,15 +537,16 @@ function mtd_donations_list( $start = false, $end = false, $return = false ) {
 			<th scope='row'>$payment->post_title</th>
 			<td>" . apply_filters( 'mt_money_format', $donation ) . "</td>
 			<td>" . date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ) . "</td>
-			<td><a href='" . get_edit_post_link( $purchase_id ) . "'>" . get_post_meta( $purchase_id, '_receipt', true ) . "</a></td>
-			</tr>";
+			<td><a href='" . get_edit_post_link( $purchase_id ) . "'>" . get_post_meta( $purchase_id, '_receipt', true ) . '</a></td>
+			</tr>';
 			$table .= $row;
 		}
 		$count = "<strong>$count</strong>";
-		$total = "<strong>" . apply_filters( 'mt_money_format', $total ) . "</strong>";
-		$totals = "<p>" . sprintf( __( '%1$s donations totaling %2$s', 'my-tickets-donations' ), $count, $total ) . "</p>";
+		$total = '<strong>' . apply_filters( 'mt_money_format', $total ) . '</strong>';
+		// Translators: Number of donations, total value.
+		$totals = '<p>' . sprintf( __( '%1$s donations totaling %2$s', 'my-tickets-donations' ), $count, $total ) . '</p>';
 		$table .= '</tbody></table>';
-		$print_report = "<p><a class='button' href='" . admin_url( 'admin.php?page=mt-reports&mt-event-report=donations&format=view&mt_print=true' ). "'>" . __( 'Print Report', 'my-tickets-donations' ) . "</a></p>";
+		$print_report = "<p><a class='button' href='" . admin_url( 'admin.php?page=mt-reports&mt-event-report=donations&format=view&mt_print=true' ). "'>" . __( 'Print Report', 'my-tickets-donations' ) . '</a></p>';
 		if ( $return ) {
 			return $totals . $table;
 		} else {
@@ -564,14 +565,19 @@ function mtd_donations_list( $start = false, $end = false, $return = false ) {
 
 /*
  * Get donation data for time period
+ *
+ * @param string $start Start date.
+ * @param string $end End date.
+ *
+ * @return array data.
  */
-function mtd_donations_data( $start=false, $end=false ) {
+function mtd_donations_data( $start = false, $end = false ) {
 	if ( isset( $_GET['mt_start'] ) && isset( $_GET['mt_end'] ) ) {
 		$start = date( 'Y-m-d', strtotime( $_GET['mt_start'] ) );
 		$end   = date( 'Y-m-d', strtotime( $_GET['mt_end'] ) );
 	} else {
-		$start   = ( !$start ) ? date( 'Y-m-d', ( current_time( 'timestamp' ) - 60*60*24*7*4 ) ) : $start;
-		$end     = ( !$end ) ? date( 'Y-m-d', ( current_time( 'timestamp' ) ) ) : $end;
+		$start   = ( ! $start ) ? date( 'Y-m-d', ( current_time( 'timestamp' ) - 60 * 60 * 24 * 7 * 4 ) ) : $start;
+		$end     = ( ! $end ) ? date( 'Y-m-d', ( current_time( 'timestamp' ) ) ) : $end;
 	}
 	$args    =
 		array(
@@ -581,19 +587,22 @@ function mtd_donations_data( $start=false, $end=false ) {
 				'relation' => 'AND',
 				'queries'  => array(
 					'key'     => '_donation',
-					'compare' => 'EXISTS'
-				)
+					'compare' => 'EXISTS',
+				),
 			),
 			'date_query'     => array(
 				'after'     => $start,
 				'before'    => $end,
-				'inclusive' => true
-			)
+				'inclusive' => true,
+			),
 		);
 	$query   = new WP_Query( $args );
-	return array( 'posts'=>$query->posts, 'start'=>$start, 'end'=>$end );
+	return array(
+		'posts' => $query->posts,
+		'start' => $start,
+		'end'   => $end,
+	);
 }
-
 
 add_action( 'admin_init', 'mtd_donations_csv' );
 /**
@@ -604,7 +613,7 @@ function mtd_donations_csv() {
 	if ( isset( $_GET['format'] ) && $_GET['format'] == 'csv'
 		&& isset( $_GET['page'] ) && $_GET['page'] == 'my-tickets-donations'
 		&& isset( $_GET['mt_start'] ) ) {
-		$data = mtd_donations_data();
+		$data  = mtd_donations_data();
 		$posts = $data['posts'];
 		$start = $data['start'];
 		$end   = $data['end'];
