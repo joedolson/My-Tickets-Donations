@@ -33,7 +33,7 @@ define( 'EDD_MTD_STORE_URL', 'https://www.joedolson.com' );
 // The title of your product in EDD and should match the download title in EDD exactly
 define( 'EDD_MTD_ITEM_NAME', 'My Tickets: Donations' );
 
-if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+if( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	// load our custom updater if it doesn't already exist
 	include( dirname( __FILE__ ) . '/updates/EDD_SL_Plugin_Updater.php' );
 }
@@ -724,6 +724,9 @@ if ( 'true' == get_option( 'mtd_license_key_valid' ) || 'valid' == get_option( '
 	add_action( 'admin_notices', 'mtd_donations_licensed' );
 }
 
+/**
+ * Display admin notice if license not provided.
+ */
 function mtd_donations_licensed() {
 	// Translators: Settings page URL.
 	$message = sprintf( __( "Please <a href='%s'>enter your My Tickets: Donations license key</a> to be eligible for support.", 'my-tickets-donations' ), admin_url( 'admin.php?page=my-tickets' ) );
