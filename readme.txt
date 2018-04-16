@@ -2,8 +2,8 @@
 Contributors: joedolson
 Donate link: http://www.joedolson.com/my-tickets/add-ons/
 Tags: my-tickets, donations
-Requires at least: 4.0
-Tested up to: 4.4.2
+Requires at least: 4.4
+Tested up to: 4.9
 Stable tag: trunk
 
 Invite purchasers to make a donation to your organization when they make their purchase.
@@ -27,7 +27,7 @@ New or updated translations are always appreciated. The translation files are in
 = 1.0.4 =
 
 * Bug fix with donations notice on receipts
-* 
+* Code updating & formatting
 
 = 1.0.3 =
 
