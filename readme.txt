@@ -29,6 +29,7 @@ New or updated translations are always appreciated. The translation files are in
 
 * Bug fix with donations notice on receipts
 * Code updating & formatting
+* COnstrain admin notices to My Tickets settings pages.
 
 = 1.0.3 =
 
