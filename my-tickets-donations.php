@@ -76,7 +76,7 @@ add_filter( 'mt_cart_custom_fields', 'mtd_custom_fields', 10, 3 );
 **/
 function mtd_custom_fields( $custom_fields, $cart, $gateway ) {
 	if ( 'offline' == $gateway ) {
-		// disable for offline payments?
+		// disable for offline payments.
 	} else {
 		$custom_fields['donations'] = '<p class="mtd_donation"><label for="mtd_donation">' . apply_filters( 'mtd_donation_label', __( 'Add a Donation to your Purchase', 'my-tickets-donations' ) ) . '<input type="text" name="mtd_donation" id="mtd_donation" /></p>';
 	}
@@ -751,7 +751,7 @@ function mtd_donations_licensed() {
 	global $current_screen;
 	if ( stripos( $current_screen->id, 'my-tickets' ) ) {
 		// Translators: Settings page URL.
-		$message = sprintf( __( "Please <a href='%s'>enter your My Tickets: Donations license key</a> to be eligible for support.", 'my-tickets-donations' ), admin_url( 'admin.php?page=my-tickets' ) );
+		$message = sprintf( __( "Please <a href='%s'>enter your My Tickets: Donations license key</a> to be eligible for support.", 'my-tickets-donations' ), admin_url( 'admin.php?page=my-tickets#mtd_license_key' ) );
 		if ( ! current_user_can( 'manage_options' ) ) { 
 			return; 
 		} else { 
