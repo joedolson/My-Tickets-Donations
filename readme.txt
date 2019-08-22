@@ -25,6 +25,10 @@ New or updated translations are always appreciated. The translation files are in
 
 == Changelog ==
 
+= 1.0.5 =
+
+* Update plugin updater class
+
 = 1.0.4 =
 
 * Bug fix with donations notice on receipts
