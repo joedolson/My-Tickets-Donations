@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/my-tickets/add-ons/
 Tags: my-tickets, donations
 Requires at least: 4.4
-Tested up to: 4.9
+Tested up to: 5.3
 Requires PHP: 5.3
 Stable tag: trunk
 
