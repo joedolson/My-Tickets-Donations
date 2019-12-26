@@ -334,7 +334,7 @@ function mtd_donations( $start, $end ) {
 			$total       = $total + $donation;
 		}
 
-		return array( 
+		return array(
 			'total' => $total,
 			'count' => $count,
 		);
@@ -708,7 +708,7 @@ function mtd_license_field( $fields ) {
 	$field  = 'mtd_license_key';
 	$active = ( 'valid' == get_option( 'mtd_license_key_valid' ) ) ? ' <span class="license-activated">(active)</span>' : '';
 	$name   =  __( 'My Tickets: Donations', 'my-tickets-donations' );
-	
+
 	return $fields . "
 	<p class='license'>
 		<label for='$field'>$name$active</label><br/>
@@ -754,9 +754,9 @@ function mtd_donations_licensed() {
 	if ( stripos( $current_screen->id, 'my-tickets' ) ) {
 		// Translators: Settings page URL.
 		$message = sprintf( __( "Please <a href='%s'>enter your My Tickets: Donations license key</a> to be eligible for support.", 'my-tickets-donations' ), admin_url( 'admin.php?page=my-tickets#mtd_license_key' ) );
-		if ( ! current_user_can( 'manage_options' ) ) { 
-			return; 
-		} else { 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		} else {
 			echo "<div class='error'><p>$message</p></div>";
 		}
 	}
