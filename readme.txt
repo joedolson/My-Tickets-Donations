@@ -28,6 +28,9 @@ New or updated translations are always appreciated. The translation files are in
 = 1.0.5 =
 
 * Update plugin updater class
+* Change copyright date.
+* Update PHP/WordPress requirements.
+* 
 
 = 1.0.4 =
 

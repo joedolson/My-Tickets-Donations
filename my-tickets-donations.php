@@ -4,7 +4,7 @@
  *
  * @package     My Tickets
  * @author      Joe Dolson
- * @copyright   2015-2018 Joe Dolson
+ * @copyright   2015-2019 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
@@ -17,11 +17,11 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     1.0.4
+ * Version:     1.0.5
  */
 
 /*
-	Copyright 2015-2018  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2015-2019  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@
 */
 
 global $mtd_version;
-$mtd_version = '1.0.4';
+$mtd_version = '1.0.5';
 
 load_plugin_textdomain( 'my-tickets-donations', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
@@ -80,6 +80,7 @@ function mtd_custom_fields( $custom_fields, $cart, $gateway ) {
 	} else {
 		$custom_fields['donations'] = '<p class="mtd_donation"><label for="mtd_donation">' . apply_filters( 'mtd_donation_label', __( 'Add a Donation to your Purchase', 'my-tickets-donations' ) ) . '<input type="text" name="mtd_donation" id="mtd_donation" /></p>';
 	}
+
 	return $custom_fields;
 }
 
@@ -266,6 +267,7 @@ function mt_get_donation_details() {
 			// Translators: amount of donation.
 			$donation = sprintf( __( 'Includes a donation of <strong>%s</strong>', 'my-tickets-donations' ), apply_filters( 'mt_money_format', $donation ) );
 		}
+
 		return $donation;
 	}
 
