@@ -30,7 +30,8 @@ New or updated translations are always appreciated. The translation files are in
 * Update plugin updater class
 * Change copyright date.
 * Update PHP/WordPress requirements.
-* 
+* Fix incorrectly prefixed function.
+* Code formatting.
 
 = 1.0.4 =
 
