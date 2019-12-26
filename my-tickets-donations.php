@@ -248,7 +248,7 @@ add_filter( 'mt_custom_receipt', 'mtd_custom_receipt' );
  * @return string Donation info.
  */
 function mtd_custom_receipt( $content ) {
-	$donation = mt_get_donation_details();
+	$donation = mtd_get_donation_details();
 
 	return $donation;
 }
@@ -259,7 +259,7 @@ function mtd_custom_receipt( $content ) {
  *
  * @return string|void
  */
-function mt_get_donation_details() {
+function mtd_get_donation_details() {
 	$receipt = mt_get_receipt();
 	if ( $receipt ) {
 		$donation = get_post_meta( $receipt->ID, '_donation', true );
